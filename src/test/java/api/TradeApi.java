@@ -1,25 +1,24 @@
 package api;
-import utils.ConfigReader;
 import endpoints.urls;
-import static io.restassured.RestAssured.*;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import model.forwardTradeModel;
 
 public class TradeApi {
     
     
-        public static String createTrade(String payload) {
-            return given()
-                    .contentType(ConfigReader.get("content.type"))
-                    .body(payload)
+        public static Response createforwardTrade(forwardTradeModel forwardTradePayload) {
+            return ApiSpec.baseSpec()
+                    .body(forwardTradePayload)
                 .when()
-                    .post(urls.CREATE_TRADE)
+                    .post(urls.CREATE_FORWARDTRADE)
                 .then()
                     .statusCode(201)
-                    .extract()
-                    .path("tradeId");
+                    .extract().response();
         }
     
         public static void amendTrade(String tradeId, String payload) {
-            given()
+            ApiSpec.baseSpec()
                 .pathParam("id", tradeId)
                 .body(payload)
             .when()
@@ -29,7 +28,7 @@ public class TradeApi {
         }
     
         public static void confirmTrade(String tradeId) {
-            given()
+           ApiSpec.baseSpec()
                 .pathParam("id", tradeId)
             .when()
                 .post(urls.CONFIRM_TRADE)
@@ -38,7 +37,7 @@ public class TradeApi {
         }
     
         public static void settleTrade(String tradeId, String payload) {
-            given()
+           ApiSpec.baseSpec()
                 .pathParam("id", tradeId)
                 .body(payload)
             .when()
@@ -46,6 +45,17 @@ public class TradeApi {
             .then()
                 .statusCode(200);
         }
+
+    public static Response getTradeResponse(String tradeId) {
+    return ApiSpec.baseSpec()
+            .contentType(ContentType.JSON)
+            .pathParam("id", tradeId)
+        .when()
+            .get(urls.GET_TRADE)
+        .then()
+            .extract()
+            .response();
+}
 }
     
 

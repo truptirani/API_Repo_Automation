@@ -1,0 +1,7 @@
+{
+  "buyCurrency": "USD",
+  "sellCurrency": "INR",
+  "buyAmount": "10000.00",
+  "rate": "83.25",
+  "status": "NEW"
+}

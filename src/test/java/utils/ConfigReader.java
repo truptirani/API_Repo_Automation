@@ -5,13 +5,12 @@ import java.util.Properties;
 
 public class ConfigReader {
 
-    private static Properties properties;
+    private static final Properties properties = new Properties();
 
     static {
         try {
             FileInputStream fis =
                 new FileInputStream("src/test/resources/config/config.properties");
-            properties = new Properties();
             properties.load(fis);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,0 +1,9 @@
+{
+    "buyCurrency":"USD",
+    "sellCurrency":"INR",
+    "buyAmount":2000,
+    "rate":1.9,
+    "customerId":"CUST1",
+    "status": "NEW",
+    "tradeType": "FORWARD"
+}
