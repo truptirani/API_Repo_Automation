@@ -1,0 +1,13 @@
+FOREIGN EXCHANGE SPOT CONFIRMATION
+Trade Reference        : TRD-2026-000123
+Trade Date             : 06-Jan-2026
+Value Date             : 08-Jan-2026
+Product                : FX SPOT
+Party A (Our Bank)     : BANK_SCB
+Party B (Counterparty) : BANK_ANZ
+Currency Pair          : EUR / USD
+Buy Currency           : EUR
+Sell Currency          : USD
+Notional Amount        : EUR 1,000,000.00
+Exchange Rate          : 1.0850
+Settlement Amount      : USD 1,085,000.00

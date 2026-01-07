@@ -46,6 +46,15 @@ public class TradeApi {
                 .statusCode(200);
         }
 
+    public static Response createSpotTrade(Object payload) {
+        return ApiSpec.baseSpec()
+                .body(payload)
+            .when()
+                .post(urls.CREATE_SPOTTRADE)
+            .then()
+                .extract().response();
+    }
+
     public static Response getTradeResponse(String tradeId) {
     return ApiSpec.baseSpec()
             .contentType(ContentType.JSON)

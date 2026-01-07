@@ -27,7 +27,7 @@ public class BaseTest {
 
         System.setProperty(
             "webdriver.chrome.driver",
-            "C:/Users/DiRai/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
+            "C:/Users/TSahu/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
         );
 
         WebDriver driver = new ChromeDriver();

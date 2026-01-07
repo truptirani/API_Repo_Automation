@@ -51,15 +51,23 @@ public class SpotTradePage {
     private WebElement tradeIdText;
 
     public void submitSpotTrade(spotTradeModel tradeData) throws InterruptedException {
-        initElements(); // ✅ GUARANTEED init
+        initElements(); 
         buyInputField.clear();
-        buyInputField.sendKeys(tradeData.getBuyCurrency());
+        if (tradeData.getBuyCurrency() != null) {
+            buyInputField.sendKeys(tradeData.getBuyCurrency());
+        }
         sellInputField.clear();
-        sellInputField.sendKeys(tradeData.getSellCurrency());
+        if (tradeData.getSellCurrency() != null) {
+            sellInputField.sendKeys(tradeData.getSellCurrency());
+        }
         amountInputField.clear();
-        amountInputField.sendKeys(tradeData.getBuyAmount().toString());
-         rateInputField.clear();
-        rateInputField.sendKeys(tradeData.getRate().toString());
+        if (tradeData.getBuyAmount() != null) {
+            amountInputField.sendKeys(tradeData.getBuyAmount().toString());
+        }
+        rateInputField.clear();
+        if (tradeData.getRate() != null) {
+            rateInputField.sendKeys(tradeData.getRate().toString());
+        }
         submitSpotButton.click();
         Thread.sleep(10000);
     }
