@@ -16,4 +16,13 @@ Feature: Spot trade API — create and verify
     Then the GET response of forward trade status should be 200
     And the returned forward trade should match the payload
 
+@smoke
+  Scenario: Verify the content of pdf generated for a spot trade
+    Given User is in the FX practice app page
+    And user creates a spot trade using "spotTrade.json"
+    When I fetch the spot trade by id
+    And generate the confirmation document using confirmation generation api
+    Then fetch the generated pdf document using pdf fetch api
+    And Verify the content of generated pdf with the expected pdf
+
     

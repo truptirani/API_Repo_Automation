@@ -1,4 +1,10 @@
 package api;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import endpoints.pdfConstants;
 import endpoints.urls;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -56,6 +62,45 @@ public class TradeApi {
             .extract()
             .response();
 }
+
+ public static Response confirmationGeneationResponse(int tradeId) {
+            return ApiSpec.baseSpec()
+            .queryParam("tradeId", tradeId)
+                .when()
+                    .post(urls.CREATE_CONFIRMATIONDOCUMENT)
+                .then()
+                    .statusCode(201)
+                    .extract().response();
+        }
+
+        public static String downloadPdf(int tradeId, String pdfFileName) {
+
+        Response response = ApiSpec.baseSpec()
+                .pathParam("id", tradeId)
+                .when()
+                    .get(urls.GET_PDFDOCUMENT)
+                .then()
+                    .statusCode(200)
+                    .contentType("application/pdf")
+                    .extract().response();
+
+        byte[] pdfBytes = response.asByteArray();
+
+        Path filePath = Paths.get(
+               pdfConstants.ACTUAL_PDF_BASE_PATH,
+                pdfFileName
+        );
+
+       try (FileOutputStream fos = new FileOutputStream(filePath.toFile())) {
+            fos.write(pdfBytes);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save PDF file: " + pdfFileName, e);
+        }
+
+        return filePath.toString();
+    }
+
 }
+
     
 
