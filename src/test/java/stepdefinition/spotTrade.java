@@ -44,7 +44,6 @@ public class spotTrade {
         spotTradeModel tradeData
                 = TestDataUtil.readJson("testdata/" + fileName, spotTradeModel.class);
 
-        // For invalid payloads (validation tests) we post directly to the API
         if ("invalidTrade.json".equals(fileName)) {
             String payload = JsonUtils.getJson(fileName);
             lastResponse = TradeApi.createSpotTrade(payload);
@@ -64,6 +63,122 @@ public class spotTrade {
     public void i_fetch_the_spot_trade_by_id(String tradeId) {
         lastResponse = TradeApi.getTradeResponse(tradeId);
         
+    }
+
+    private static java.util.Map<String, String> previousStatus = new java.util.HashMap<>();
+
+    @When("I confirm the trade with ID {string}")
+    public void i_confirm_the_trade_with_id_frontend(String tradeId) throws InterruptedException {
+        int id = Integer.parseInt(tradeId);
+
+        String prev = spotTradePage.getTradeStatusById(id);
+        if (prev == null) {
+            try {
+                Response respBefore = TradeApi.getTradeResponse(tradeId);
+                if (respBefore != null && respBefore.getStatusCode() < 500) {
+                    try {
+                        spotTradeModel t = respBefore.as(spotTradeModel.class);
+                        prev = t.getStatus();
+                    } catch (Exception ignored) { }
+                } else if (respBefore != null) {
+                    System.out.println("GET before confirm returned status " + respBefore.getStatusCode() + ": " + respBefore.getBody().asString());
+                }
+            } catch (Exception ignored) { }
+        }
+        if (prev != null) {
+            previousStatus.put(tradeId, prev);
+        }
+
+        spotTradePage.confirmTradeById(id);
+
+        String observed = waitForStatus(tradeId, null, 15);
+        System.out.println("Observed status after confirm: " + observed);
+
+        lastResponse = TradeApi.getTradeResponse(tradeId);
+    }
+
+    @When("I cancel the trade with ID {string}")
+    public void i_cancel_the_trade_with_id_frontend(String tradeId) throws InterruptedException {
+        int id = Integer.parseInt(tradeId);
+
+        String prev = spotTradePage.getTradeStatusById(id);
+        if (prev == null) {
+            try {
+                Response respBefore = TradeApi.getTradeResponse(tradeId);
+                if (respBefore != null && respBefore.getStatusCode() < 500) {
+                    try { spotTradeModel t = respBefore.as(spotTradeModel.class); prev = t.getStatus(); } catch (Exception ignored) {}
+                }
+            } catch (Exception ignored) { }
+        }
+        if (prev != null) previousStatus.put(tradeId, prev);
+
+        spotTradePage.cancelTradeById(id);
+
+        String observed = waitForStatus(tradeId, "CANCELLED", 15);
+        System.out.println("Observed status after cancel: " + observed);
+
+        lastResponse = TradeApi.getTradeResponse(tradeId);
+    }
+
+    /**
+     * Poll the trade GET endpoint until the status equals expectedStatus (if provided),
+     * or until timeout. Returns the latest observed status (or null if never observed).
+     */
+    private String waitForStatus(String tradeId, String expectedStatus, int timeoutSeconds) throws InterruptedException {
+        int waited = 0;
+        String lastStatus = null;
+        while (waited < timeoutSeconds * 1000) {
+            Response resp = TradeApi.getTradeResponse(tradeId);
+            if (resp == null) {
+                System.out.println("GET returned null response for trade " + tradeId);
+            } else {
+                int code = resp.getStatusCode();
+                System.out.println("GET /trades/" + tradeId + " status=" + code);
+                if (code >= 500) {
+                    System.out.println("Server error on GET: " + resp.getBody().asString());
+                } else {
+                    try {
+                        spotTradeModel m = resp.as(spotTradeModel.class);
+                        if (m != null) {
+                            lastStatus = m.getStatus();
+                            if (lastStatus != null) {
+                                if (expectedStatus == null || expectedStatus.equalsIgnoreCase(lastStatus)) {
+                                    return lastStatus;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Failed to parse GET response: " + e.getMessage());
+                    }
+                }
+            }
+            Thread.sleep(1000);
+            waited += 1000;
+        }
+        return lastStatus;
+    }
+
+
+    @Then("the trade status for ID {string} should be {string} from {string}")
+    public void the_trade_status_for_ID_should_be_from(String tradeId, String expectedStatus, String fromStatus) throws InterruptedException {
+        String prev = previousStatus.get(tradeId);
+        if (prev != null) {
+            assertEquals("Previous status mismatch", fromStatus, prev);
+        }
+
+        int id = Integer.parseInt(tradeId);
+        String uiStatus = spotTradePage.getTradeStatusById(id);
+        System.out.println("UI status immediately after confirm: " + uiStatus);
+        String actual = waitForStatus(tradeId, expectedStatus, 30);
+
+        if (actual == null) {
+            uiStatus = spotTradePage.getTradeStatusById(id);
+            System.out.println("UI status on fallback read: " + uiStatus);
+            actual = uiStatus;
+        }
+
+        System.out.println("Final observed status for " + tradeId + " = " + actual);
+        assertEquals("Trade status did not update as expected", expectedStatus, actual);
     }
 
     @Then("the GET response status should be {int}")
