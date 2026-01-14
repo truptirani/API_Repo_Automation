@@ -24,11 +24,7 @@ public class BaseTest {
 
     public void setupUI() {
         System.out.println(">>> UI SETUP STARTED <<<");
-
-        System.setProperty(
-            "webdriver.chrome.driver",
-            "C:/Users/DiRai/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
-        );
+        System.setProperty("webdriver.chrome.driver", ConfigReader.get("chrome.driver.path"));
 
         WebDriver driver = new ChromeDriver();
         driver.get(ConfigReader.get("url"));
