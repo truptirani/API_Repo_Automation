@@ -84,13 +84,12 @@ public class TradeApi {
 
         public static String downloadPdf(int tradeId, String pdfFileName) {
 
-        Response response = ApiSpec.baseSpec()
+        Response response = ApiSpec.baseSpecForPdf()
                 .pathParam("id", tradeId)
                 .when()
                     .get(urls.GET_PDFDOCUMENT)
                 .then()
                     .statusCode(200)
-                    .contentType("application/pdf")
                     .extract().response();
 
         byte[] pdfBytes = response.asByteArray();

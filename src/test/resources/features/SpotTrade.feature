@@ -24,7 +24,7 @@ Feature: Spot trade API — create and verify
     Then fetch the generated pdf document using pdf fetch api
     And Verify the content of generated pdf with the expected pdf
 
- @smoke   
+@smoke
 Scenario: Fetching a spot trade with an invalid trade id should fail
   Given User is in the FX practice app page
   And user creates a spot trade using "spotTrade.json"

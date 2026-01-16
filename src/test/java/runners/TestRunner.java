@@ -10,7 +10,7 @@ import io.cucumber.testng.CucumberOptions;
                 "base"             
         },
         plugin = {"pretty"},
-        tags = "@confirm"
+        tags = "@confirm or @smoke"
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
 }
