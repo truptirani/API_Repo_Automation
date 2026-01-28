@@ -24,6 +24,15 @@ Feature: Spot trade API — create and verify
     Then fetch the generated pdf document using pdf fetch api
     And Verify the content of generated pdf with the expected pdf
 
+
+  @smoke
+  Scenario: Verify the content of pdf generated for a froward trade 
+    Given user creates a forward trade post request
+    When I fetch the forward trade by id
+    And generate the confirmation document for forward trade using confirmation generation api
+    Then fetch the generated pdf document for forward trade using pdf fetch api
+    And Verify the content of generated pdf with the expected pdf for forward trade
+
 @smoke
 Scenario: Fetching a spot trade with an invalid trade id should fail
   Given User is in the FX practice app page

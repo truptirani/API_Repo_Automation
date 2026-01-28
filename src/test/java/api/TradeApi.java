@@ -61,7 +61,7 @@ public class TradeApi {
                 .extract().response();
     }
 
-    public static Response getTradeResponse(String tradeId) {
+    public static Response getTradeResponse(int tradeId) {
     return ApiSpec.baseSpec()
             .contentType(ContentType.JSON)
             .pathParam("id", tradeId)

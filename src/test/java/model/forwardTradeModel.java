@@ -8,6 +8,7 @@ public class forwardTradeModel {
     private String rate;
     private String customerId;
     private String status;
+    private String counterparty;
     private String tradeType;
 
     // Getters and Setters
@@ -65,5 +66,13 @@ public class forwardTradeModel {
 
     public void setTradeType(String tradeType) {
         this.tradeType = tradeType;
+    }
+
+    public String getCounterparty() {
+        return counterparty;
+    }
+
+    public void setCounterparty(String counterparty) {
+        this.counterparty = counterparty;
     }
 }

@@ -7,6 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import base.DriverManager;
 import model.spotTradeModel;
+import utils.ElementUtil;
 
 public class SpotTradePage {
 
@@ -50,6 +51,9 @@ public class SpotTradePage {
     @FindBy(xpath = "//div[contains(text(),'Created trade id')]")
     private WebElement tradeIdText;
 
+    @FindBy(xpath = "//label[text()='Counterparty']/parent::div/select")
+    private WebElement counterpartySelect;
+
     public void submitSpotTrade(spotTradeModel tradeData) throws InterruptedException {
         initElements(); 
         buyInputField.clear();
@@ -68,6 +72,8 @@ public class SpotTradePage {
         if (tradeData.getRate() != null) {
             rateInputField.sendKeys(tradeData.getRate().toString());
         }
+
+        ElementUtil.selectElementByText(counterpartySelect, tradeData.getCounterparty().toUpperCase());
         submitSpotButton.click();
         Thread.sleep(10000);
     }

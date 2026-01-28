@@ -8,7 +8,8 @@ public class pdfFields {
         "Instrument", "SPOT\\s+([A-Z]{3}/[A-Z]{3})",
         "BuyAmount", "buy\\s+(\\d+\\.\\d+)",
         "SellAmount", "sell\\s+(\\d+\\.\\d+)",
-        "Rate", "rate\\s+(\\d+\\.\\d+)"
+        "Rate", "rate\\s+(\\d+\\.\\d+)",
+        "counterparty", "counterparty\\s+([A-Za-z]+)"
     );
 
     public static final Map<String, String> FORWARD_TRADE_CONFIRMATION = Map.of(
@@ -16,7 +17,8 @@ public class pdfFields {
         "BuyAmount", "buy\\s+(\\d+\\.\\d+)",
         "SellAmount", "sell\\s+(\\d+\\.\\d+)",
         "Rate", "rate\\s+(\\d+\\.\\d+)",
-        "ValueDate", "valueDate\\s+(\\d{4}-\\d{2}-\\d{2})"
+        "ValueDate", "valueDate\\s+(\\d{4}-\\d{2}-\\d{2})",
+        "counterparty", "counterparty\\s+([A-Za-z]+)"
     );
 
     private pdfFields() {

@@ -9,6 +9,7 @@ public class spotTradeModel {
     private BigDecimal buyAmount;
     private BigDecimal rate;
     private String status;
+    private String counterparty;
     
 
     public String getBuyCurrency() {
@@ -49,6 +50,14 @@ public class spotTradeModel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCounterparty() {
+        return counterparty;
+    }
+
+    public void setCounterparty(String counterparty) {
+        this.counterparty = counterparty;
     }
 
 }

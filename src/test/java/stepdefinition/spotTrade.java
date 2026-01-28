@@ -61,12 +61,12 @@ public class spotTrade {
     public void i_fetch_the_trade_by_id() {
         tradeID = spotTradePage.getTradeId();
         System.out.println("Trade ID: " + tradeID);
-        lastResponse = TradeApi.getTradeResponse(String.valueOf(tradeID));
+        lastResponse = TradeApi.getTradeResponse(tradeID);
     }
 
     @When("I fetch the spot trade by id {string}")
     public void i_fetch_the_spot_trade_by_id(String tradeId) {
-        lastResponse = TradeApi.getTradeResponse(tradeId);
+        lastResponse = TradeApi.getTradeResponse(tradeID);
         
     }
 
@@ -79,7 +79,7 @@ public class spotTrade {
         String prev = spotTradePage.getTradeStatusById(id);
         if (prev == null) {
             try {
-                Response respBefore = TradeApi.getTradeResponse(tradeId);
+                Response respBefore = TradeApi.getTradeResponse(tradeID);
                 if (respBefore != null && respBefore.getStatusCode() < 500) {
                     try {
                         spotTradeModel t = respBefore.as(spotTradeModel.class);
@@ -99,7 +99,7 @@ public class spotTrade {
         String observed = waitForStatus(tradeId, null, 15);
         System.out.println("Observed status after confirm: " + observed);
 
-        lastResponse = TradeApi.getTradeResponse(tradeId);
+        lastResponse = TradeApi.getTradeResponse(tradeID);
     }
 
     @When("I cancel the trade with ID {string}")
@@ -109,7 +109,7 @@ public class spotTrade {
         String prev = spotTradePage.getTradeStatusById(id);
         if (prev == null) {
             try {
-                Response respBefore = TradeApi.getTradeResponse(tradeId);
+                Response respBefore = TradeApi.getTradeResponse(tradeID);
                 if (respBefore != null && respBefore.getStatusCode() < 500) {
                     try { spotTradeModel t = respBefore.as(spotTradeModel.class); prev = t.getStatus(); } catch (Exception ignored) {}
                 }
@@ -122,7 +122,7 @@ public class spotTrade {
         String observed = waitForStatus(tradeId, "CANCELLED", 15);
         System.out.println("Observed status after cancel: " + observed);
 
-        lastResponse = TradeApi.getTradeResponse(tradeId);
+        lastResponse = TradeApi.getTradeResponse(tradeID);
     }
 
     /**
@@ -133,7 +133,7 @@ public class spotTrade {
         int waited = 0;
         String lastStatus = null;
         while (waited < timeoutSeconds * 1000) {
-            Response resp = TradeApi.getTradeResponse(tradeId);
+            Response resp = TradeApi.getTradeResponse(tradeID);
             if (resp == null) {
                 System.out.println("GET returned null response for trade " + tradeId);
             } else {
@@ -192,7 +192,7 @@ public class spotTrade {
         if (lastResponse != null) {
             response = lastResponse;
         } else {
-            response = TradeApi.getTradeResponse(String.valueOf(spotTradePage.getTradeId()));
+            response = TradeApi.getTradeResponse(spotTradePage.getTradeId());
         }
         System.out.println(response.getStatusCode());
         assertEquals(statusCode, response.getStatusCode());
@@ -210,7 +210,7 @@ public class spotTrade {
     @Then("the returned trade should match the payload {string}")
     public void the_returned_trade_should_match_the_payload(String fileName) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Response response = TradeApi.getTradeResponse(String.valueOf(spotTradePage.getTradeId()));
+        Response response = TradeApi.getTradeResponse(spotTradePage.getTradeId());
        spotTradeModel actualTrade = response.as(spotTradeModel.class);
         spotTradeModel expectedTrade
                 = mapper.readValue(

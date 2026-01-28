@@ -3,5 +3,6 @@
   "sellCurrency": "INR",
   "buyAmount": "10000.00",
   "rate": "83.25",
+  "counterparty": "hdfc",
   "status": "NEW"
 }
