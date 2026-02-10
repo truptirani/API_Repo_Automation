@@ -1,16 +1,21 @@
 package runners;
 
-import io.cucumber.testng.AbstractTestNGCucumberTests;
-import io.cucumber.testng.CucumberOptions;
+import org.junit.runner.RunWith;
 
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+
+@RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/resources/features",
-        glue = {
-                "stepdefinition",
-                "base"             
+        features = "src/test/resources/features/SpotTrade.feature",
+        glue = {"stepdefinition"},
+        tags = "@smoke",
+        plugin = {
+                "pretty",
+                "html:target/cucumber-report.html",
+                "json:target/cucumber.json"
         },
-        plugin = {"pretty"},
-        tags = "@confirm or @smoke"
+        monochrome = true
 )
-public class TestRunner extends AbstractTestNGCucumberTests {
+public class TestRunner {
 }
